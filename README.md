@@ -1,2 +1,6 @@
 # cawBot
-discord bot, always a wip
+discord bot made with discord.js
+
+will probably always be wip
+
+feel free to copy/improve/whatever

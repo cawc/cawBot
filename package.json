@@ -1,0 +1,28 @@
+{
+  "name": "cawbot",
+  "version": "1.0.0",
+  "description": "WIP Discord bot made with discord.js",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cawc/cawBot.git"
+  },
+  "author": "cawc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cawc/cawBot/issues"
+  },
+  "homepage": "https://github.com/cawc/cawBot#readme",
+  "dependencies": {
+    "@google/maps": "^0.4.2",
+    "child_process": "^1.0.2",
+    "discord.js": "^11.1.0",
+    "request": "^2.81.0",
+    "sqlite": "^2.8.0",
+    "winston": "^2.3.1",
+    "xml2js": "^0.4.17"
+  }
+}
