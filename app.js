@@ -6,7 +6,6 @@ const token = require('./token.json');
 const bl = require('./bl.js');
 
 const request = require('request');
-const parsexml = require('xml2js').parseString;
 var fs = require('fs');
 
 var commands = fs.readdirSync('./commands').map(x => {
