@@ -23,9 +23,7 @@ let logger = new(winston.Logger)({
 
 client.on('ready', () => {
 	console.log('cawBot ready!');
-	let game = new Object();
-	game.name = config.startgame;
-	client.user.setPresence({game});
+	client.user.setPresence({game: {name: config.startgame, type: 0}});
 });
 
 client.on('message', message => {
