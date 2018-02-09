@@ -1,5 +1,6 @@
 const request = require('request');
 const Discord = require('discord.js');
+const prefix = require('../config.json').prefix;
 exports.run = (client, message, args, config) => {
 	let url;
 	if (isNaN(args[0])) {
@@ -17,11 +18,11 @@ exports.run = (client, message, args, config) => {
 				.setTimestamp(new Date(jsonData.year, jsonData.month - 1, jsonData.day))
 				.setURL(`http://xkcd.com/${jsonData.num}`);
 
-			message.channel.send('', {
-				embed: embed
-			});
+			message.channel.send({embed});
 		} else {
 			message.channel.send('That xkcd doesn\'t exist!');
 		}
 	});
 };
+
+exports.help = `Shows an xkcd comic. Usage: ${prefix}xkcd [optional comic number]`;

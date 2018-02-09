@@ -1,6 +1,8 @@
 const token = require('../token.json');
 const request = require('request');
 const Discord = require('discord.js');
+const prefix = require('../config.json').prefix;
+
 const modes = ['osu', 'taiko', 'ctb', 'mania']; //don't change order, cus of bad code below
 exports.run = (client, message, args, config) => {
 	const osutoken = token.osu;
@@ -28,6 +30,8 @@ exports.run = (client, message, args, config) => {
 			}
 		})
 	} else {
-		message.reply('Wrong syntax! Correct usage: "cb.osu [username] [osu|mania|taiko|ctb]"');
+		message.reply(`Wrong arguments given. Use ${prefix}help for help.`);
 	}
 }
+
+exports.help = `Shows osu! stats for a user. Usage: ${prefix}osu [username] [osu|mania|taiko|ctb]`;

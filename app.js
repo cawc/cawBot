@@ -6,15 +6,13 @@ const token = require('./token.json');
 const bl = require('./bl.js');
 
 const request = require('request');
-var fs = require('fs');
+const fs = require('fs');
 
-var commands = fs.readdirSync('./commands').map(x => {
-	return x.slice(0, -3)
-});
-console.log(commands)
+const commands = fs.readdirSync('./commands').map(x => {return x.slice(0, -3)});
+console.log(commands);
 
-var winston = require('winston');
-var logger = new(winston.Logger)({
+const winston = require('winston');
+let logger = new(winston.Logger)({
 	transports: [
 		new(winston.transports.Console)(),
 		new(winston.transports.File)({
@@ -25,7 +23,9 @@ var logger = new(winston.Logger)({
 
 client.on('ready', () => {
 	console.log('cawBot ready!');
-	client.user.setGame(config.startgame);
+	let game = new Object();
+	game.name = config.startgame;
+	client.user.setPresence({game});
 });
 
 client.on('message', message => {

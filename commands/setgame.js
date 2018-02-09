@@ -1,5 +1,8 @@
 exports.run = (client, message, args, config) => {
 	if (message.member.roles.find("name", "cawbot_mod") || message.author.id === config.id) {
-		client.user.setGame(args.join(' ')).catch(console.error);
+		let msg = args.join(' ')
+		let game = new Object();
+		game.name = msg;
+		client.user.setPresence({game});
 	}
 }
