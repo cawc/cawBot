@@ -9,7 +9,6 @@ exports.run = (client, message, args, config) => {
 	if(args.length === 2 && modes.includes(args[1].toLowerCase())) {
 		let mode = args[1];
 		const url = `https://osu.ppy.sh/api/get_user?k=${osutoken}&u=${args[0]}&m=${modes.indexOf(mode)}`;
-		console.log(url);
 		request(url, (error, response, body) => {
 			if (!error && response.statusCode === 200) {
 				let jsonData = JSON.parse(body);
