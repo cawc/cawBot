@@ -10,10 +10,9 @@ exports.run = (client, message, args, config) => {
 		let mode = args[1];
 		const url = `https://osu.ppy.sh/api/get_user?k=${osutoken}&u=${args[0]}&m=${modes.indexOf(mode)}`;
 		console.log(url);
-		request(url, (error, body, response) => {
-			if (!error && response !== "[]") {
-				let jsonData = JSON.parse(response);
-				//console.log(jsonData);
+		request(url, (error, response, body) => {
+			if (!error && response.statusCode === 200) {
+				let jsonData = JSON.parse(body);
 				let embed = new Discord.RichEmbed()
 				.setTitle(`${jsonData[0].username}'s osu! stats in ${mode}`)
 				.setThumbnail(`https://a.ppy.sh/${jsonData[0].user_id}`)

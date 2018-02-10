@@ -6,7 +6,7 @@ exports.run = (client, message, args, config) => {
 		let min = Math.ceil(args[0]);
 		let max = Math.floor(args[1]);
 		let roll = Math.round(Math.random() * (max - min)) + min;
-		message.reply(`Rolled ${roll}`);
+		message.reply(`Rolled ${roll}`); //todo: add reroll function using reactions
 	}
 }
 
