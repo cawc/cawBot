@@ -1,7 +1,8 @@
 const request = require('request');
 const Discord = require('discord.js');
 const prefix = require('../config.json').prefix;
-exports.run = (client, message, args, config) => {
+
+exports.run = (client, message, args) => {
 	let url;
 	if (isNaN(args[0])) {
 		url = 'http://xkcd.com/info.0.json';
