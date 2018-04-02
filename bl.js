@@ -1,1 +1,1 @@
-module.exports = ['cv', 'uwu'];
+module.exports = [];

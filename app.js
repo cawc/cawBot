@@ -2,7 +2,6 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
 const sqlite = require('sqlite');
-
 const config = require('./config.json');
 const token = require('./token.json');
 const bl = require('./bl.js');
@@ -15,28 +14,32 @@ const commands = fs.readdirSync('./commands').map(x => {
 sqlite.open('./db.sqlite');
 
 client.on('ready', () => {
-	sqlite.run('CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, guildid INTEGER, chanid INTEGER, uid INTEGER, timestamp INTEGER, message TEXT);');
-	sqlite.run('CREATE TABLE IF NOT EXISTS guilds (id INTEGER, timestamp INTEGER);');
+	sqlite.run('CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, guildid INTEGER, chanid INTEGER, uid INTEGER, timestamp INTEGER, message TEXT, deleted INTEGER);');
 	sqlite.run('CREATE TABLE IF NOT EXISTS channels (id INTEGER, timestamp INTEGER, ignored INTEGER);');
 	sqlite.run('CREATE TABLE IF NOT EXISTS users (id INTEGER, timestamp INTEGER, name TEXT);');
-	// sqlite.run('CREATE TABLE IF NOT EXISTS levels (uid INTEGER PRIMARY KEY, xp INTEGER, level INTEGER);');
+	
+	client.channels.forEach(channel => {
+		if(channel.type == 'text'){
+			sqlite.get(`SELECT * FROM channels WHERE id = "${channel.id}";`)
+				.then(row => {
+					if(!row) {
+						sqlite.run('INSERT INTO channels (id, timestamp, ignored) VALUES (?, ?, ?)', [channel.id, Date.now(), false]).catch(() => {console.error('Channel not added');});
+					}
+				}).catch(() => {console.error;});
+		}
+	});
 
-	//console.log('cawBot ready!');
+	//Set game to the one defined in the configuration file
 	client.user.setPresence({
 		game: {
 			name: config.startgame,
 			type: 0
 		}
 	});
+});
 
-
-	/* sqlite.all('SELECT messages.timestamp, messages.message, users.name, MAX(users.timestamp) FROM messages, users WHERE users.id = messages.uid GROUP BY messages.id;').then(rows=>{
-		for(let i=0; i<rows.length; i++){
-			let timestamp = new Date(rows[i].timestamp).toString();
-			console.log(`${timestamp} - ${rows[i].name}: ${rows[i].message}`);
-		}
-	}); */
-
+client.on('messageDelete', message => {
+	sqlite.run(`UPDATE messages SET deleted = 1 WHERE id = "${message.id}"`);
 });
 
 client.on('message', message => {
@@ -48,12 +51,6 @@ client.on('message', message => {
 			if(!row) sqlite.run('INSERT INTO users (id, timestamp, name) VALUES (?, ?, ?)', [message.author.id, Date.now(), message.author.tag]).catch(() => {console.error('User not added');});
 		}).catch(() => {console.error;});
 
-	//check if server is already saved
-	sqlite.get(`SELECT * FROM guilds WHERE id = "${message.guild.id}";`)
-		.then((row) => {
-			if(!row) sqlite.run('INSERT INTO guilds (id, timestamp) VALUES (?, ?)', [message.guild.id, Date.now()]).catch(() => {console.error('Server not added');});
-		}).catch(() => {console.error;});
-
 	//check if channel is already saved
 	sqlite.get(`SELECT * FROM channels WHERE id = "${message.channel.id}";`)
 		.then(row => {
@@ -61,7 +58,7 @@ client.on('message', message => {
 		}).catch(() => {console.error;});
 
 	//log message
-	sqlite.run('INSERT INTO messages (id, guildid, chanid, uid, timestamp, message) VALUES (?, ?, ?, ?, ?, ?);', [message.id, message.guild.id, message.channel.id, message.author.id, Date.now(),message.content])
+	sqlite.run('INSERT INTO messages (id, guildid, chanid, uid, timestamp, message, deleted) VALUES (?, ?, ?, ?, ?, ?, ?);', [message.id, message.guild.id, message.channel.id, message.author.id, Date.now(),message.content, 0])
 		.catch(() => {console.error;});
 	//end log
 
@@ -78,7 +75,7 @@ client.on('message', message => {
 
 		if (!commands.some(x => x === command)) return; //if the command doesnt match the list of commands, ignore
 
-		sqlite.get(`SELECT ignored FROM channels WHERE id = "${message.channel.id}";`).then((row) => {
+		sqlite.get(`SELECT ignored FROM channels WHERE id = "${message.channel.id}";`).then(row => {
 			if(row != null && row.ignored && command !== 'toggleignore') {
 				return;
 			} else {
