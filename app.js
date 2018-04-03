@@ -9,7 +9,6 @@ const bl = require('./bl.js');
 const commands = fs.readdirSync('./commands').map(x => {
 	return x.slice(0, -3);
 });
-//console.log(commands);
 
 sqlite.open('./db.sqlite');
 
@@ -17,7 +16,8 @@ client.on('ready', () => {
 	sqlite.run('CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, guildid INTEGER, chanid INTEGER, uid INTEGER, timestamp INTEGER, message TEXT, deleted INTEGER);');
 	sqlite.run('CREATE TABLE IF NOT EXISTS channels (id INTEGER, timestamp INTEGER, ignored INTEGER);');
 	sqlite.run('CREATE TABLE IF NOT EXISTS users (id INTEGER, timestamp INTEGER, name TEXT);');
-	
+
+	//Load all channels from the client and check if they are already stored in the database.
 	client.channels.forEach(channel => {
 		if(channel.type == 'text'){
 			sqlite.get(`SELECT * FROM channels WHERE id = "${channel.id}";`)
