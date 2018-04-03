@@ -7,6 +7,8 @@ exports.run = (client, message, args) => {
 		if(!message.mentions.members.first().bot && message.mentions.members.first().kickable) {
 			let reason = args.slice(1).join(' ');
 			message.mentions.members.first().send(reason).then(() => {message.mentions.members.first().kick();},() => {message.mentions.members.first().kick();});
+		} else {
+			message.reply('Sorry, I can\'t kick bots or this user has a higher rank than me');
 		}
 	}
 };

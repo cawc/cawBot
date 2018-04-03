@@ -58,7 +58,7 @@ client.on('message', message => {
 		}).catch(() => {console.error;});
 
 	//log message
-	sqlite.run('INSERT INTO messages (id, guildid, chanid, uid, timestamp, message, deleted) VALUES (?, ?, ?, ?, ?, ?, ?);', [message.id, message.guild.id, message.channel.id, message.author.id, Date.now(),message.content, 0])
+	sqlite.run('INSERT INTO messages (id, guildid, chanid, uid, timestamp, message, deleted) VALUES (?, ?, ?, ?, ?, ?, ?);', [message.id, message.guild.id, message.channel.id, message.author.id, Date.now(),message.content, false])
 		.catch(() => {console.error;});
 	//end log
 
@@ -86,7 +86,7 @@ client.on('message', message => {
 					console.error(err);
 				}
 			}
-		}).catch((err) => {message.reply('Whoops, something went wrong while trying to do that. Please try again!'); console.error(err);});	
+		}).catch(err => {message.reply('Whoops, something went wrong while trying to do that. Please try again!'); console.error(err);});	
 	}
 });
 
